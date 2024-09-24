@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 
 const mongoose = require("mongoose");
-const usemodel = require("./Schema/3usermodal");
+const usermodel = require("./Schema/usermodel3");
 
 // mongo db connection
 
+app.use(express.json());
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017")
+  .connect("mongodb://127.0.0.1:27017/RAVI")
   .then((res) => {
     console.log("MongoDB Connected");
   })

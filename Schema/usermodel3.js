@@ -24,5 +24,6 @@ const schema = new mongoose.Schema({
   },
 });
 
-const usemodel = mongoose.model("New Collection", schema);
-module.exports = usemodel;
+const usermodel = mongoose.model("New Collection", schema);
+
+module.exports = usermodel;
