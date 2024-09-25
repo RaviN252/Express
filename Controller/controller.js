@@ -67,7 +67,6 @@ exports.getOneData = async (req, res) => {
 };
 
 // function update
-
 exports.updateData = async (req, res) => {
   try {
     const updateUser = await usermodel.findOneAndUpdate(
@@ -77,23 +76,45 @@ exports.updateData = async (req, res) => {
         new: true,
       }
     );
+
     if (updateUser) {
       res.status(201).json({
         message: "Data Updated Successfully",
         updateUser,
       });
     } else {
-      res.status(400).json({
+      res.status(404).json({
         message: "Data Not Found",
       });
     }
   } catch (err) {
     res.status(400).json({
       message: "Data Not Updated",
+      err,
     });
   }
 };
 
+// update function by id
+exports.updateData = async (req, res) => {
+  try {
+    const updateUser = await usermodel.findById(req.params.id, { new: true });
+    if (updateUser) {
+      res.status(201).json({
+        message: "Data Updated SuccessFully",
+        updateUser,
+      });
+    } else {
+      req.status(404).json({
+        message: "Data Not Founf",
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      message: "Data Not Found",
+    });
+  }
+};
 
 // function Delete
 exports.deleteData = async (req, res) => {
@@ -109,6 +130,27 @@ exports.deleteData = async (req, res) => {
     } else {
       res.status(404).json({
         message: "Data Not Found",
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      message: "Data Not Found",
+    });
+  }
+};
+
+// delete function by id
+
+exports.deleteData = async (req, res) => {
+  try {
+    const deleteUser = await usermodel.findById(res.params.id);
+    if (deleteUser) {
+      res.status(200).json({
+        message: "Data Deleted Success Fully",
+      });
+    } else {
+      res.status(404).json({
+        message: "Data Not Found ",
       });
     }
   } catch (err) {
