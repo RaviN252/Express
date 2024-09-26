@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const schema = new mongoose.Schema({
   fname: {
@@ -25,6 +26,7 @@ const schema = new mongoose.Schema({
     required: true,
   },
 });
+
 const saltRounds = 12;
 schema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, saltRounds);

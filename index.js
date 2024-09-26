@@ -33,16 +33,21 @@ app.get("/api/getOneData/:id", controller.getOneData);
 
 // update function
 app.put("/api/UpdateData", controller.updateData);
-//  127.0.0.1:5002/api/UpdateData?email=ram@gmail.com
+//  127.0.0.1:5002/api/UpdateData?email=user1@gmail.com
 
 // update function by id
-app.put("api/UpdateData/:id");
+app.put("api/UpdateData/:id", controller.updateData);
 
 // delete function
 app.delete("api/DeleteData", controller.deleteData);
 // 127.0.0.1:5002/api/DeleteData?email=ram@gmail.com
 
 // delete function by id
+app.delete("api/DeleteData/:id", controller.deleteData);
+
+// user login check password
+app.post("api/signin", controller.postData);
+//127.0.0.1:5002/api/signin?email=user3@gmail.com
 
 // strating appp with port number
 app.listen(5002, "127.0.0.1", () => {

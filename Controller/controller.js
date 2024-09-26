@@ -72,9 +72,7 @@ exports.updateData = async (req, res) => {
     const updateUser = await usermodel.findOneAndUpdate(
       { email: req.query.email },
       req.body,
-      {
-        new: true,
-      }
+      { new: true }
     );
 
     if (updateUser) {
@@ -98,11 +96,10 @@ exports.updateData = async (req, res) => {
 // update function by id
 exports.updateData = async (req, res) => {
   try {
-    const updateUser = await usermodel.findById(req.params.id, { new: true });
-    if (updateUser) {
+    const updateData = await usermodel.findById(req.params.id, { new: true });
+    if (updateData) {
       res.status(201).json({
         message: "Data Updated SuccessFully",
-        updateUser,
       });
     } else {
       req.status(404).json({
@@ -133,8 +130,8 @@ exports.deleteData = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(404).json({
-      message: "Data Not Found",
+    res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };
@@ -154,8 +151,36 @@ exports.deleteData = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(404).json({
-      message: "Data Not Found",
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// login without Password Hashing
+
+exports.sign_in = async (req, res) => {
+  try {
+    const DBdata = await usermodel.findOne({ email: req.body.email });
+
+    if (DBdata) {
+      if (DBdata.password === req.body.password) {
+        res.status(200).json({
+          message: "Login Successfully",
+        });
+      } else {
+        res.status(400).json({
+          message: "Incorrect Password",
+        });
+      }
+    } else {
+      res.status(404).json({
+        message: "Invalid Email Id",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };
