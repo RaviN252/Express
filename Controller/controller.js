@@ -1,4 +1,5 @@
 const usermodel = require("../Schema/usermodel3");
+const bcrypt = require("bcrypt");
 
 // functionality for post data
 
@@ -67,7 +68,7 @@ exports.getOneData = async (req, res) => {
 };
 
 // function update
-exports.updateData = async (req, res) => {
+exports.updatedDataByQuery = async (req, res) => {
   try {
     const updateUser = await usermodel.findOneAndUpdate(
       { email: req.query.email },
@@ -82,54 +83,60 @@ exports.updateData = async (req, res) => {
       });
     } else {
       res.status(404).json({
-        message: "Data Not Found",
+        message: "Data Not Updated",
       });
     }
   } catch (err) {
     res.status(400).json({
-      message: "Data Not Updated",
+      message: "Data Not url error",
       err,
     });
   }
 };
 
 // update function by id
-exports.updateData = async (req, res) => {
+exports.updateDataById = async (req, res) => {
   try {
-    const updateData = await usermodel.findById(req.params.id, { new: true });
+    const updateData = await usermodel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
     if (updateData) {
       res.status(201).json({
         message: "Data Updated SuccessFully",
+        updateData,
       });
     } else {
       req.status(404).json({
-        message: "Data Not Founf",
+        message: "Data Not Able to Update",
       });
     }
   } catch (err) {
     res.status(400).json({
-      message: "Data Not Found",
+      message: "Data Not found to update",
     });
   }
 };
 
 // function Delete
-exports.deleteData = async (req, res) => {
+exports.deleteDataByQuery = async (req, res) => {
   try {
-    const deleteUser = await usermodel.findOneAndDelete({
+    const deleteUserQuery = await usermodel.findOneAndDelete({
       email: req.query.email,
     });
 
-    if (deleteUser) {
+    if (deleteUserQuery) {
       res.status(200).json({
         message: "Data Deleted Successfully",
       });
     } else {
       res.status(404).json({
-        message: "Data Not Found",
+        message: "Data Not Deleted",
       });
     }
   } catch (err) {
+    console.error("Error deleting data:", err);
     res.status(500).json({
       message: "Internal Server Error",
     });
@@ -138,16 +145,16 @@ exports.deleteData = async (req, res) => {
 
 // delete function by id
 
-exports.deleteData = async (req, res) => {
+exports.deleteDataById = async (req, res) => {
   try {
-    const deleteUser = await usermodel.findById(res.params.id);
-    if (deleteUser) {
+    const deleteUserId = await usermodel.findByIdAndDelete(req.params.id);
+    if (deleteUserId) {
       res.status(200).json({
         message: "Data Deleted Success Fully",
       });
     } else {
       res.status(404).json({
-        message: "Data Not Found ",
+        message: "Data Not Deleted by Id",
       });
     }
   } catch (err) {
@@ -159,12 +166,39 @@ exports.deleteData = async (req, res) => {
 
 // login without Password Hashing
 
-exports.sign_in = async (req, res) => {
+exports.signin = async (req, res) => {
   try {
     const DBdata = await usermodel.findOne({ email: req.body.email });
 
     if (DBdata) {
       if (DBdata.password === req.body.password) {
+        res.status(200).json({
+          message: "Login Successfully",
+        });
+      } else {
+        res.status(400).json({
+          message: "Incorrect Password",
+        });
+      }
+    } else {
+      res.status(404).json({
+        message: "Invalid Email Id",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// login  with hashing
+exports.hashsignin = async (req, res) => {
+  try {
+    const DBdata = await usermodel.findOne({ email: req.body.email });
+
+    if (DBdata) {
+      if (await bcrypt.compare(req.body.password, DBdata.password)) {
         res.status(200).json({
           message: "Login Successfully",
         });

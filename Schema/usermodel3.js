@@ -27,10 +27,10 @@ const schema = new mongoose.Schema({
   },
 });
 
-const saltRounds = 12;
-schema.pre("save", async function () {
-  this.password = await bcrypt.hash(this.password, saltRounds);
-});
+// const saltRounds = 12;
+// schema.pre("save", async function () {
+//   this.password = await bcrypt.hash(this.password, saltRounds);
+// });
 
 const usermodel = mongoose.model("New Collection", schema);
 

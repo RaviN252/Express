@@ -32,24 +32,27 @@ app.get("/api/getOneData", controller.getOneData);
 app.get("/api/getOneData/:id", controller.getOneData);
 
 // update function
-app.put("/api/UpdateData", controller.updateData);
+app.put("/api/UpdateData", controller.updatedDataByQuery);
 //  127.0.0.1:5002/api/UpdateData?email=user1@gmail.com
 
-// update function by id
-app.put("api/UpdateData/:id", controller.updateData);
+// update function by i
+app.put("/api/updateDataById/:id", controller.updateDataById);
 
 // delete function
-app.delete("api/DeleteData", controller.deleteData);
+app.delete("/api/DeleteDataByQuery", controller.deleteDataByQuery);
 // 127.0.0.1:5002/api/DeleteData?email=ram@gmail.com
 
 // delete function by id
-app.delete("api/DeleteData/:id", controller.deleteData);
+app.delete("/api/DeleteDataById/:id", controller.deleteDataById);
 
 // user login check password
-app.post("api/signin", controller.postData);
-//127.0.0.1:5002/api/signin?email=user3@gmail.com
+app.post("/api/signin", controller.signin);
+
+
+// user login with hashing
+app.post("/api/hashsignin", controller.hashsignin);
 
 // strating appp with port number
-app.listen(5002, "127.0.0.1", () => {
-  console.log("Server Started");
+app.listen(5005, "127.0.0.1", () => {
+  console.log("Server Started at 5005");
 });
